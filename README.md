@@ -1,66 +1,25 @@
-## Telegram Python Bot
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/a0ln90?referralCode=CREDITS&utm_medium=integration&utm_source=template&utm_campaign=generic)
+TOKEN = "8706855235:AAGfz4VbHR6aXHOwfHhfLI-5v7ThHitJS-Q"
 
-## Overview
+# /start
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Привет! Я бот 🤖")
 
-This project is a simple Telegram bot built using the telebot library. It demonstrates the basic structure of a Telegram bot and uses uv for dependency management. The bot responds to commands and messages, and can be easily extended with additional functionality.
+# обработка текста
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
+    await update.message.reply_text(f"Ты написал: {text}")
 
-## Key Features
+def main():
+    app = Application.builder().token(TOKEN).build()
 
-- Minimal Telegram bot application
-- Responds to '/start' and '/hello' commands
-- Echoes all other messages
-- Uses telebot for bot functionality
-- Uses uv for dependency management
-- Easy to understand and extend
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
-## Setup
+    print("Бот запущен...")
+    app.run_polling()
 
-```bash
-pip install uv
-uv sync
-```
-
-## Develop
-
-To run the bot locally:
-
-```bash
-uv run python -B main.py
-```
-
-Make sure to set up your `.env` file with your Telegram bot token:
-
-```bash
-TELEGRAM_BOT_TOKEN=your_token_here
-```
-
-## Deploy
-
-Initialize your project:
-
-```bash
-railway init
-```
-
-To deploy the bot on Railway:
-
-```bash
-railway up
-```
-
-Remember to set the `TELEGRAM_BOT_TOKEN` environment variable in your Railway project settings.TELEGRAM_BOT_TOKEN
-
-## Test
-
-Open Telegram, start a chat with your bot, and try the commands `/start` or `/hello`. The bot will also echo any other messages you send.
-
-## Learn More
-
-- [Telebot Documentation](https://pypi.org/project/pyTelegramBotAPI/)
-- [uv Documentation](https://docs.astral.sh/uv/)
-- [Telegram Bot API](https://core.telegram.org/bots/api)
-- [Railway Documentation](https://docs.railway.app/)
-- [Telegram Python Bot Repository](https://github.com/aeither/telegram-bot-python/)
-- [Railway Marketplace](https://railway.app/template/a0ln90)
+if __name__ == "__main__":
+    main()
